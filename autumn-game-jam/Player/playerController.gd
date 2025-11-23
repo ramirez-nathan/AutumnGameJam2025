@@ -9,6 +9,11 @@ const TILE_SIZE := 1.0
 var current_form: Form = Form.DUCK
 var previous_form: Form = Form.DUCK
 
+# input lock
+var input_locked := false
+var input_lock_time := 0.15  # tuneable, 150ms feels good
+
+
 var form_stats := {
 	Form.DUCK: {
 		"move_speed": 6.0,
@@ -66,7 +71,7 @@ func _physics_process(delta: float) -> void:
 
 # input handler
 func _handle_input():
-	if is_moving:
+	if is_moving or is_jumping or input_locked:
 		return
 		
 	var dir := Vector3.ZERO
@@ -152,6 +157,7 @@ func _handle_movement(delta):
 		if global_position.distance_to(target_position) < 0.01:
 			global_position = target_position
 			is_moving = false
+			_lock_input_for(input_lock_time)
 			
 # kangaroo jump
 func _start_kangaroo_jump(dir: Vector3, dist: int):
@@ -161,6 +167,12 @@ func _start_kangaroo_jump(dir: Vector3, dist: int):
 	target_position = global_position + (dir * TILE_SIZE * dist)
 	_jump_start_pos = global_position
 	_jump_peak_height = 1.0
+	
+func _lock_input_for(time: float):
+	input_locked = true
+	await get_tree().create_timer(time).timeout
+	input_locked = false
+
 
 func _update_kangaroo_jump(delta):
 	jump_timer += delta
@@ -169,6 +181,7 @@ func _update_kangaroo_jump(delta):
 	if t >= 1.0:
 		global_position = target_position
 		is_jumping = false
+		_lock_input_for(input_lock_time)
 		return
 
 	# Parabolic arc
