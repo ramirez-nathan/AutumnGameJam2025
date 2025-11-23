@@ -4,11 +4,12 @@ extends Node3D
 @export var numColumns: int = 30
 @export var cellSize: float = 1.0
 @export var groundHeight: float = 0.5
-@export var numPlatforms: int = 6    # how many safe green cells
+@export var numPlatforms: int = 4
+@export var playableHalfWidth: int = 7    # matches Player.maxAbsGridX
 
 var rng := RandomNumberGenerator.new()
 var halfColumns: int = 0
-var walkableColumns: Dictionary = {}     # xIndex -> true if SAFE
+var walkableColumns: Dictionary = {}     # xIndex -> true if SAFE (green platform)
 
 
 func _ready() -> void:
@@ -19,7 +20,7 @@ func _ready() -> void:
 func createRow() -> void:
 	halfColumns = numColumns / 2
 
-	# 1. Create black ground cells across the whole row
+	# 1. Create black ground cells across the whole row (with band highlight)
 	for col in range(numColumns):
 		var xIndex: int = col - halfColumns
 		createGroundCell(xIndex)
@@ -43,7 +44,13 @@ func createGroundCell(xIndex: int) -> void:
 	cell.mesh = box
 
 	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(0.826, 0.815, 0.0, 1.0)  # BLACK ravine
+
+	# Inside band = dark gray, outside = full black
+	if abs(xIndex) <= playableHalfWidth:
+		mat.albedo_color = Color(0.08, 0.08, 0.08)
+	else:
+		mat.albedo_color = Color(0.0, 0.0, 0.0)
+
 	cell.set_surface_override_material(0, mat)
 
 	cell.position = Vector3(float(xIndex) * cellSize, -groundHeight / 2.0, 0.0)
@@ -74,3 +81,10 @@ func isCellWalkable(xIndex: int) -> bool:
 
 	# Only green platforms are safe
 	return walkableColumns.has(xIndex)
+
+
+func getSafeColumns() -> Array[int]:
+	var cols: Array[int] = []
+	for x in walkableColumns.keys():
+		cols.append(int(x))
+	return cols

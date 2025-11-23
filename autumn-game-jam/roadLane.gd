@@ -5,15 +5,36 @@ extends Node3D
 @export var cellSize: float = 1.0
 @export var groundHeight: float = 0.5
 @export var obstacleChance: float = 0.2
+@export var playableHalfWidth: int = 7    # matches Player.maxAbsGridX
 
 var rng := RandomNumberGenerator.new()
 var halfColumns: int = 0
 var blockedColumns: Dictionary = {}
+var protectedColumns: Dictionary = {}    # xIndex -> true if should NEVER spawn obstacle
+var obstacleNodes: Dictionary = {}       # xIndex -> MeshInstance3D
 
 
 func _ready() -> void:
 	rng.randomize()
 	createRow()
+
+
+func setProtectedColumns(columns: Array[int]) -> void:
+	protectedColumns.clear()
+	for x in columns:
+		protectedColumns[int(x)] = true
+
+
+func clearObstaclesAtColumns(columns: Array[int]) -> void:
+	for x in columns:
+		var key: int = int(x)
+		if obstacleNodes.has(key):
+			var node: Node3D = obstacleNodes[key]
+			if is_instance_valid(node):
+				node.queue_free()
+			obstacleNodes.erase(key)
+		if blockedColumns.has(key):
+			blockedColumns.erase(key)
 
 
 func createRow() -> void:
@@ -23,7 +44,7 @@ func createRow() -> void:
 		var xIndex: int = col - halfColumns
 		createGroundCell(xIndex)
 
-		if rng.randf() < obstacleChance:
+		if not protectedColumns.has(xIndex) and rng.randf() < obstacleChance:
 			createObstacleAt(xIndex)
 
 
@@ -34,7 +55,13 @@ func createGroundCell(xIndex: int) -> void:
 	cell.mesh = box
 
 	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(0.391, 0.391, 0.391, 1.0)  # GRAY road
+
+	# Inside playable band = mid gray, outside = very dark gray
+	if abs(xIndex) <= playableHalfWidth:
+		mat.albedo_color = Color(0.4, 0.4, 0.4)   # main road
+	else:
+		mat.albedo_color = Color(0.1, 0.1, 0.1)   # dark shoulder / off-limits
+
 	cell.set_surface_override_material(0, mat)
 
 	cell.position = Vector3(float(xIndex) * cellSize, -groundHeight / 2.0, 0.0)
@@ -57,6 +84,7 @@ func createObstacleAt(xIndex: int) -> void:
 	add_child(block)
 
 	blockedColumns[xIndex] = true
+	obstacleNodes[xIndex] = block
 
 
 func isCellWalkable(xIndex: int) -> bool:

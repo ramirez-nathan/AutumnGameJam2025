@@ -3,7 +3,7 @@ extends Node3D
 
 @export var cellSize: float = 1.0       # must match World / lane cellSize
 @export var moveDuration: float = 0.12  # seconds for one hop animation
-@export var maxAbsGridX: int = 7        # player can move from -7 to +7 (15 tiles wide)
+@export var maxAbsGridX: int = 10        # player can move from -10 to +10 (21 tiles wide)
 
 var gridX: int = 0
 var gridZ: int = 0

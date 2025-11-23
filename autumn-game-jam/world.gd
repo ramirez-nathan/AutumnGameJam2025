@@ -41,8 +41,6 @@ func _process(delta: float) -> void:
 
 		if currentLaneIndex > furthestLaneTraveled:
 			furthestLaneTraveled = currentLaneIndex
-			# Debug:
-			# print("New furthest lane: ", furthestLaneTraveled)
 
 	ensureLanesAroundPlayer()
 	cleanupOldLanes()
@@ -93,7 +91,6 @@ func chooseLaneType(laneIndex: int) -> int:
 		candidate = LaneType.RAVINE
 
 	# Ravine only 1 lane wide FOR NOW:
-	# if last lane was ravine and we rolled ravine again, force non-ravine
 	if lastLaneType == LaneType.RAVINE and candidate == LaneType.RAVINE:
 		candidate = LaneType.FOREST if rng.randf() < 0.5 else LaneType.ROAD
 
@@ -116,12 +113,31 @@ func spawnLane(laneIndex: int) -> void:
 			scene = forestLaneScene
 
 	var lane: Node3D = scene.instantiate()
+
+	# 1) Handle "AFTER ravine": if previous lane is ravine, protect its platform columns
+	var prevIndex: int = laneIndex - 1
+	if laneMap.has(prevIndex):
+		var prevLane: Node = laneMap[prevIndex]
+		if prevLane.has_method("getSafeColumns") and lane.has_method("setProtectedColumns"):
+			var safeColsRaw: Array = prevLane.getSafeColumns()
+			var safeCols: Array[int] = []
+			for c in safeColsRaw:
+				safeCols.append(int(c))
+			lane.setProtectedColumns(safeCols)
+	# (lane _ready hasn't fired yet; this affects obstacle spawning)
+
 	add_child(lane)
 
 	lane.position = Vector3(0.0, 0.0, float(laneIndex) * cellSize)
 	lane.set_meta("laneIndex", laneIndex)
-
 	laneMap[laneIndex] = lane
+
+	# 2) Handle "BEFORE ravine": if THIS lane is a ravine, clear obstacles in the lane before it
+	if lane.has_method("getSafeColumns") and laneMap.has(prevIndex):
+		var safeCols2: Array[int] = lane.getSafeColumns()
+		var prevLane2: Node = laneMap[prevIndex]
+		if prevLane2.has_method("clearObstaclesAtColumns"):
+			prevLane2.clearObstaclesAtColumns(safeCols2)
 
 
 func cleanupOldLanes() -> void:
@@ -145,7 +161,6 @@ func isLaneWithinBounds(laneIndex: int) -> bool:
 
 
 func isCellWalkable(gridX: int, gridZ: int) -> bool:
-	# First make sure the lane itself is playable
 	if not isLaneWithinBounds(gridZ):
 		return false
 
@@ -156,5 +171,4 @@ func isCellWalkable(gridX: int, gridZ: int) -> bool:
 	if lane.has_method("isCellWalkable"):
 		return lane.isCellWalkable(gridX)
 
-	# If the lane doesn't implement it, assume it's walkable
 	return true
