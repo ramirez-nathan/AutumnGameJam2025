@@ -1,6 +1,6 @@
 extends CharacterBody3D
 
-enum Form { DUCK, KANGAROO, HAWK }
+enum Form { DUCK, KANGAROO, HAWK, CAPYBARA }
 
 # movement tuning
 const TILE_SIZE := 1.0
@@ -23,6 +23,10 @@ var form_stats := {
 	Form.HAWK: {
 		"move_speed": 10.0,
 		"can_move_freely": false,
+	},
+	Form.CAPYBARA: {
+		"move_speed": 1.0,
+		"can_move_freely": true,
 	}
 }
 
@@ -43,6 +47,9 @@ var is_hawk_powered := false
 var hawk_timer := 0.0
 var max_hawk_time := 3.0
 var _hawk_start_pos := Vector3.ZERO
+
+# forms that can be cycled through (hawk is excluded)
+var cycle_forms := [Form.DUCK, Form.KANGAROO, Form.CAPYBARA]
 
 func _ready() -> void:
 	target_position = global_position
@@ -77,17 +84,48 @@ func _handle_input():
 		input_dir = dir.normalized()
 		_attempt_move()
 		
-	if Input.is_action_just_pressed("shift_duck"):
-		_set_form(Form.DUCK)
-	if Input.is_action_just_pressed("shift_kangaroo"):
-		_set_form(Form.KANGAROO)
+	# cycle forward
+	if Input.is_action_just_pressed("shift_form"):
+		cycle_form_forward()
 
+	# arrow key cycling
+	if Input.is_action_just_pressed("cycle_right"):
+		cycle_form_forward()
+
+	if Input.is_action_just_pressed("cycle_left"):
+		cycle_form_backward()
+
+# form change helpers
 func _set_form(new_form: Form):
 	if current_form == new_form:
 		return
 		
 	current_form = new_form
 	print("Shifted to: ", Form.keys()[new_form])
+	
+func cycle_form_forward():
+	if is_hawk_powered:
+		return  # can't swap during hawk mode
+
+	var idx = cycle_forms.find(current_form)
+	if idx == -1:
+		return
+
+	var next_idx = (idx + 1) % cycle_forms.size()
+	_set_form(cycle_forms[next_idx])
+
+
+func cycle_form_backward():
+	if is_hawk_powered:
+		return
+
+	var idx = cycle_forms.find(current_form)
+	if idx == -1:
+		return
+
+	var prev_idx = (idx - 1 + cycle_forms.size()) % cycle_forms.size()
+	_set_form(cycle_forms[prev_idx])
+
 	
 func _attempt_move():
 	var stats = form_stats[current_form]
