@@ -1,0 +1,18 @@
+[gd_scene load_steps=6 format=3 uid="uid://bvr0idg7u2a0w"]
+
+[ext_resource type="Script" uid="uid://beg1w506dyy82" path="res://world.gd" id="1_036b0"]
+[ext_resource type="PackedScene" uid="uid://badkx5cymgnbn" path="res://player.tscn" id="1_f3sb7"]
+[ext_resource type="PackedScene" uid="uid://d2qamcto1m3es" path="res://forestLane.tscn" id="2_dwbse"]
+[ext_resource type="PackedScene" uid="uid://b5ajfwbtvetpk" path="res://roadLane.tscn" id="3_pkg7o"]
+[ext_resource type="PackedScene" uid="uid://dfape05bh31a0" path="res://ravineLane.tscn" id="4_gbfbk"]
+
+[node name="World" type="Node3D"]
+script = ExtResource("1_036b0")
+forestLaneScene = ExtResource("2_dwbse")
+roadLaneScene = ExtResource("3_pkg7o")
+ravineLaneScene = ExtResource("4_gbfbk")
+
+[node name="Player" parent="." instance=ExtResource("1_f3sb7")]
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+transform = Transform3D(-0.9063078, 0.3237444, -0.2716538, 0, 0.64278764, 0.76604444, 0.42261827, 0.69427204, -0.58256346, -2, 4, -4)
