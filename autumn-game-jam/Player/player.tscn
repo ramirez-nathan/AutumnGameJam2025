@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://ct7li1g2ktr8i"]
+
+[ext_resource type="Script" uid="uid://k7qkiynbn7p7" path="res://Player/playerController.gd" id="1_l8h54"]
+[ext_resource type="PackedScene" uid="uid://bva4olwrks6fr" path="res://Assets/Animals/Duck.glb" id="2_4ntmi"]
+[ext_resource type="PackedScene" uid="uid://8cdn27y76m50" path="res://Assets/Animals/Kangaroo.glb" id="3_btcbx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hvfyp"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_hvfyp"]
+
+[node name="CharacterBody3D" type="CharacterBody3D"]
+script = ExtResource("1_l8h54")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_hvfyp")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("BoxMesh_hvfyp")
+
+[node name="Marker3D" type="Marker3D" parent="."]
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+
+[node name="Duck2" parent="." instance=ExtResource("2_4ntmi")]
+visible = false
+
+[node name="Kangaroo2" parent="." instance=ExtResource("3_btcbx")]
+transform = Transform3D(-1.0927847e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.0927847e-08, 0, 0, 0)

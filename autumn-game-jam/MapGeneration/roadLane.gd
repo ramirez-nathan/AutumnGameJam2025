@@ -1,17 +1,17 @@
-# forestLane.gd
+# roadLane.gd
 extends Node3D
 
-@export var numColumns: int = 30      # width of lane in tiles
+@export var numColumns: int = 30
 @export var cellSize: float = 1.0
 @export var groundHeight: float = 0.5
-@export var obstacleChance: float = 0.3   # chance per cell for a red block
-@export var playableHalfWidth: int = 7    # matches Player.maxAbsGridX
+@export var obstacleChance: float = 0.2
+@export var playableHalfWidth: int = 10    # should match Player.maxAbsGridX
 
 var rng := RandomNumberGenerator.new()
 var halfColumns: int = 0
 var blockedColumns: Dictionary = {}      # xIndex -> true if blocked
 var protectedColumns: Dictionary = {}    # xIndex -> true if should NEVER spawn obstacle
-var obstacleNodes: Dictionary = {}       # xIndex -> MeshInstance3D for that obstacle
+var obstacleNodes: Dictionary = {}       # xIndex -> Node3D for that obstacle
 
 
 func _ready() -> void:
@@ -56,11 +56,11 @@ func createGroundCell(xIndex: int) -> void:
 
 	var mat := StandardMaterial3D.new()
 
-	# Inside playable band = brighter green, outside = darker green
+	# Inside playable band = mid gray, outside = very dark gray
 	if abs(xIndex) <= playableHalfWidth:
-		mat.albedo_color = Color(0.1, 0.8, 0.1)   # bright playable area
+		mat.albedo_color = Color(0.4, 0.4, 0.4)   # main road
 	else:
-		mat.albedo_color = Color(0.05, 0.3, 0.05) # darker "no-go" zone
+		mat.albedo_color = Color(0.1, 0.1, 0.1)   # dark shoulder / off-limits
 
 	cell.set_surface_override_material(0, mat)
 
@@ -69,22 +69,23 @@ func createGroundCell(xIndex: int) -> void:
 
 
 func createObstacleAt(xIndex: int) -> void:
-	var block := MeshInstance3D.new()
+	# TEMP: simple box obstacle — replace this block with your own scene instantiate
+	var obstacle := MeshInstance3D.new()
 	var box := BoxMesh.new()
 
 	var obstacleHeight: float = cellSize * 0.8
 	box.size = Vector3(cellSize * 0.6, obstacleHeight, cellSize * 0.6)
-	block.mesh = box
+	obstacle.mesh = box
 
 	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(1.0, 0.0, 0.0)  # RED
-	block.set_surface_override_material(0, mat)
+	mat.albedo_color = Color(1.0, 0.0, 0.0)  # RED barrier
+	obstacle.set_surface_override_material(0, mat)
 
-	block.position = Vector3(float(xIndex) * cellSize, obstacleHeight / 2.0, 0.0)
-	add_child(block)
+	obstacle.position = Vector3(float(xIndex) * cellSize, obstacleHeight / 2.0, 0.0)
+	add_child(obstacle)
 
 	blockedColumns[xIndex] = true
-	obstacleNodes[xIndex] = block
+	obstacleNodes[xIndex] = obstacle
 
 
 func isCellWalkable(xIndex: int) -> bool:

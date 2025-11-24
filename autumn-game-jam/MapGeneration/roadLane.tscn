@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b5ajfwbtvetpk"]
 
-[ext_resource type="Script" uid="uid://b2sngbj1fvd8k" path="res://roadLane.gd" id="1_ljgbb"]
+[ext_resource type="Script" uid="uid://b2sngbj1fvd8k" path="res://MapGeneration/roadLane.gd" id="1_ljgbb"]
 
 [node name="roadLane" type="Node3D"]
 script = ExtResource("1_ljgbb")

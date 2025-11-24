@@ -1,11 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://badkx5cymgnbn"]
 
 [ext_resource type="Script" uid="uid://s802uvdt0fxs" path="res://player.gd" id="1_4flbx"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_sh265"]
+[ext_resource type="PackedScene" uid="uid://bva4olwrks6fr" path="res://Assets/Animals/Duck.glb" id="2_onrkg"]
 
 [node name="Player" type="Node3D"]
 script = ExtResource("1_4flbx")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("CapsuleMesh_sh265")
+[node name="Duck2" parent="." instance=ExtResource("2_onrkg")]
+transform = Transform3D(-1.5298985e-08, 0, -0.35, 0, 0.35, 0, 0.35, 0, -1.5298985e-08, 0, 0, 0)

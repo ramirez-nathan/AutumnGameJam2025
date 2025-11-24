@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://d2qamcto1m3es"]
-
-[ext_resource type="Script" uid="uid://cvc48jcrb7cmi" path="res://forestLane.gd" id="1_xtare"]
-
-[node name="ForestLane" type="Node3D"]
-script = ExtResource("1_xtare")
