@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://ct7li1g2ktr8i"]
+[gd_scene load_steps=11 format=3 uid="uid://ct7li1g2ktr8i"]
 
 [ext_resource type="Script" uid="uid://k7qkiynbn7p7" path="res://Player/playerController.gd" id="1_l8h54"]
 [ext_resource type="PackedScene" uid="uid://bva4olwrks6fr" path="res://Assets/Animals/Duck.glb" id="2_4ntmi"]
@@ -7,6 +7,29 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_hvfyp"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_hvfyp"]
+
+[sub_resource type="Curve" id="Curve_btcbx"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.45454544, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_gwnis"]
+curve = SubResource("Curve_btcbx")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_k53q1"]
+particle_flag_align_y = true
+direction = Vector3(0, 1, 0)
+initial_velocity_min = 35.29
+initial_velocity_max = 58.82
+scale_max = 6.8799996
+scale_curve = SubResource("CurveTexture_gwnis")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fhl08"]
+transparency = 1
+albedo_color = Color(0.8346143, 0.8346143, 0.8346143, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vtle1"]
+material = SubResource("StandardMaterial3D_fhl08")
+size = Vector3(0.05, 0.05, 0.05)
 
 [node name="CharacterBody3D" type="CharacterBody3D"]
 script = ExtResource("1_l8h54")
@@ -22,8 +45,22 @@ mesh = SubResource("BoxMesh_hvfyp")
 
 [node name="RayCast3D" type="RayCast3D" parent="."]
 
-[node name="Duck2" parent="." instance=ExtResource("2_4ntmi")]
+[node name="Models" type="Node3D" parent="."]
+
+[node name="DUCK" parent="Models" instance=ExtResource("2_4ntmi")]
+transform = Transform3D(-1.3113417e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.3113417e-08, 0, 0, 0)
+
+[node name="KANGAROO" parent="Models" instance=ExtResource("3_btcbx")]
+transform = Transform3D(-1.0927847e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.0927847e-08, 0, 0, 0)
 visible = false
 
-[node name="Kangaroo2" parent="." instance=ExtResource("3_btcbx")]
-transform = Transform3D(-1.0927847e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.0927847e-08, 0, 0, 0)
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+emitting = false
+amount = 30
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_k53q1")
+draw_pass_1 = SubResource("BoxMesh_vtle1")

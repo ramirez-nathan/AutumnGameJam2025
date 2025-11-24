@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bvr0idg7u2a0w"]
+[gd_scene load_steps=11 format=3 uid="uid://bvr0idg7u2a0w"]
 
 [ext_resource type="Script" uid="uid://beg1w506dyy82" path="res://world.gd" id="1_036b0"]
 [ext_resource type="PackedScene" uid="uid://d2qamcto1m3es" path="res://MapGeneration/forestLane.tscn" id="2_dwbse"]
@@ -6,6 +6,26 @@
 [ext_resource type="PackedScene" uid="uid://dfape05bh31a0" path="res://MapGeneration/ravineLane.tscn" id="4_gbfbk"]
 [ext_resource type="PackedScene" uid="uid://ct7li1g2ktr8i" path="res://Player/player.tscn" id="5_036b0"]
 [ext_resource type="Script" uid="uid://c11yfukvnxs1i" path="res://cameraController.gd" id="5_dwbse"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_dwbse"]
+font_size = 40
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 23
+shadow_color = Color(0, 0, 0, 0.25882354)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dwbse"]
+bg_color = Color(0.1764706, 0.1764706, 0.1764706, 0.6)
+
+[sub_resource type="LabelSettings" id="LabelSettings_pkg7o"]
+font_size = 85
+outline_size = 20
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_gbfbk"]
+font_size = 25
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
 
 [node name="MapGenerationWorld" type="Node3D"]
 script = ExtResource("1_036b0")
@@ -25,3 +45,67 @@ transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Score" type="Label" parent="UI"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -775.0
+offset_top = 50.0
+offset_right = -49.999146
+offset_bottom = 161.0
+grow_horizontal = 0
+text = "SCORE: "
+label_settings = SubResource("LabelSettings_dwbse")
+horizontal_alignment = 2
+
+[node name="PauseScreen" type="Panel" parent="UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dwbse")
+
+[node name="Label" type="Label" parent="UI/PauseScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "PAUSED"
+label_settings = SubResource("LabelSettings_pkg7o")
+
+[node name="Label2" type="Label" parent="UI/PauseScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -164.0
+offset_top = 40.0
+offset_right = 164.0
+offset_bottom = 156.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Click to continue"
+label_settings = SubResource("LabelSettings_gbfbk")
+horizontal_alignment = 1

@@ -19,7 +19,7 @@ var previous_form: Form = Form.DUCK
 
 # input lock
 var input_locked := false
-var input_lock_time := 0.05  # tuneable, 50ms feels good
+var input_lock_time := 0.01  # tuneable, 50ms feels good
 
 var form_stats := {
 	Form.DUCK: {
@@ -207,7 +207,18 @@ func _set_form(new_form: Form):
 		return
 
 	current_form = new_form
+	for i in $Models.get_children():
+		i.hide()
+	if current_form == Form.DUCK:
+		$Models/DUCK.show()
+	elif current_form == Form.KANGAROO:
+		$Models/KANGAROO.show()
+	
+	var copy = $'GPUParticles3D'.duplicate()
+	add_child(copy)
+	copy.emitting = true
 	print("Shifted to: ", Form.keys()[new_form])
+	await get_tree().create_timer(0.5).timeout
 
 
 func cycle_form_forward():
