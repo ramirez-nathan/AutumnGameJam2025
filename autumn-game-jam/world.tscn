@@ -1,0 +1,22 @@
+[gd_scene load_steps=6 format=3 uid="uid://bvr0idg7u2a0w"]
+
+[ext_resource type="Script" uid="uid://beg1w506dyy82" path="res://world.gd" id="1_036b0"]
+[ext_resource type="PackedScene" uid="uid://d2qamcto1m3es" path="res://MapGeneration/forestLane.tscn" id="2_dwbse"]
+[ext_resource type="PackedScene" uid="uid://b5ajfwbtvetpk" path="res://MapGeneration/roadLane.tscn" id="3_pkg7o"]
+[ext_resource type="PackedScene" uid="uid://dfape05bh31a0" path="res://MapGeneration/ravineLane.tscn" id="4_gbfbk"]
+[ext_resource type="PackedScene" uid="uid://ct7li1g2ktr8i" path="res://Player/player.tscn" id="5_036b0"]
+
+[node name="MapGenerationWorld" type="Node3D"]
+script = ExtResource("1_036b0")
+forestLaneScene = ExtResource("2_dwbse")
+roadLaneScene = ExtResource("3_pkg7o")
+ravineLaneScene = ExtResource("4_gbfbk")
+
+[node name="Player" parent="." instance=ExtResource("5_036b0")]
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+transform = Transform3D(-0.9063078, 0.3237444, -0.2716538, 0, 0.64278764, 0.76604444, 0.42261827, 0.69427204, -0.58256346, -2, 4, -4)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true

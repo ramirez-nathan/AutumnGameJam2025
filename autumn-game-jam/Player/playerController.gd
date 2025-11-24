@@ -1,3 +1,4 @@
+# playerController.gd
 extends CharacterBody3D
 
 enum Form { DUCK, KANGAROO, HAWK, CAPYBARA }
@@ -5,14 +6,20 @@ enum Form { DUCK, KANGAROO, HAWK, CAPYBARA }
 # movement tuning
 const TILE_SIZE := 1.0
 
+@export var cellSize: float = 1.0      # should match World + lanes (keep at 1.0)
+@export var maxAbsGridX: int = 10      # player can move from -10..+10
+
+# grid state (logical tile position)
+var gridX: int = 0
+var gridZ: int = 0
+
 # form state trackers
 var current_form: Form = Form.DUCK
 var previous_form: Form = Form.DUCK
 
 # input lock
 var input_locked := false
-var input_lock_time := 0.15  # tuneable, 150ms feels good
-
+var input_lock_time := 0.05  # tuneable, 50ms feels good
 
 var form_stats := {
 	Form.DUCK: {
@@ -46,6 +53,8 @@ var jump_timer := 0.0
 var jump_duration := 0.25
 var _jump_start_pos := Vector3.ZERO
 var _jump_peak_height := 1.0
+var _jump_target_grid_x: int = 0
+var _jump_target_grid_z: int = 0
 
 # hawk specific states
 var is_hawk_powered := false
@@ -56,39 +65,46 @@ var _hawk_start_pos := Vector3.ZERO
 # forms that can be cycled through (hawk is excluded)
 var cycle_forms := [Form.DUCK, Form.KANGAROO, Form.CAPYBARA]
 
+
 func _ready() -> void:
+	# Snap to grid at start
+	gridX = roundi(global_position.x / cellSize)
+	gridZ = roundi(global_position.z / cellSize)
+	global_position = Vector3(gridX * cellSize, global_position.y, gridZ * cellSize)
 	target_position = global_position
-	
+
+
 # main phys loop
 func _physics_process(delta: float) -> void:
 	# Hawk power overrides all input & movement
 	if is_hawk_powered:
 		_handle_hawk_power(delta)
 		return
-	
+
 	_handle_input()
 	_handle_movement(delta)
+
 
 # input handler
 func _handle_input():
 	if is_moving or is_jumping or input_locked:
 		return
-		
+
 	var dir := Vector3.ZERO
-	
-	if Input.is_action_pressed("move_forward"):
-		dir.z -= 1
-	if Input.is_action_pressed("move_back"):
+
+	# Use just_pressed and an elif chain so we only move 1 tile in 1 direction per tap
+	if Input.is_action_just_pressed("move_forward"):
 		dir.z += 1
-	if Input.is_action_pressed("move_left"):
-		dir.x -= 1
-	if Input.is_action_pressed("move_right"):
+	elif Input.is_action_just_pressed("move_back"):
+		dir.z -= 1
+	elif Input.is_action_just_pressed("move_left"):
 		dir.x += 1
-	
+	elif Input.is_action_just_pressed("move_right"):
+		dir.x -= 1
+
 	if dir != Vector3.ZERO:
-		input_dir = dir.normalized()
-		_attempt_move()
-		
+		_attempt_move(dir)
+
 	# cycle forward
 	if Input.is_action_just_pressed("shift_form"):
 		cycle_form_forward()
@@ -100,14 +116,85 @@ func _handle_input():
 	if Input.is_action_just_pressed("cycle_left"):
 		cycle_form_backward()
 
+
+# central move validation: band, lanes, collision
+func _can_move_to(targetGridX: int, targetGridZ: int) -> bool:
+	# 0) horizontal band limit (-maxAbsGridX .. +maxAbsGridX)
+	if abs(targetGridX) > maxAbsGridX:
+		return false
+
+	var worldNode: Node = get_parent()
+
+	# 1) lane window / back-forward limits
+	if worldNode != null and worldNode.has_method("isLaneWithinBounds"):
+		if not worldNode.isLaneWithinBounds(targetGridZ):
+			return false
+
+	# 2) tile walkability (no trees, no road blocks, must be on platform, etc.)
+	if worldNode != null and worldNode.has_method("isCellWalkable"):
+		if not worldNode.isCellWalkable(targetGridX, targetGridZ):
+			return false
+
+	return true
+
+
+func _attempt_move(dir: Vector3) -> void:
+	var stats = form_stats[current_form]
+
+	# convert direction vector to grid deltas (-1/0/1)
+	var dx: int = int(dir.x)
+	var dz: int = int(dir.z)
+
+	# KANGAROO: jumping multiple tiles
+	if current_form == Form.KANGAROO:
+		var jump_dist: int = stats["jump_distance"]
+		_start_kangaroo_jump(dx, dz, jump_dist)
+		return
+
+	# Basic 1-tile step for duck/capybara
+	var newGridX: int = gridX + dx
+	var newGridZ: int = gridZ + dz
+
+	if not _can_move_to(newGridX, newGridZ):
+		return
+
+	gridX = newGridX
+	gridZ = newGridZ
+
+	target_position = Vector3(
+		gridX * cellSize,
+		global_position.y,
+		gridZ * cellSize
+	)
+
+	is_moving = true
+
+
+func _handle_movement(delta):
+	# kangaroo jump update
+	if current_form == Form.KANGAROO and is_jumping:
+		_update_kangaroo_jump(delta)
+		return
+
+	if is_moving:
+		var speed: float = form_stats[current_form]["move_speed"]
+		global_position = global_position.move_toward(target_position, speed * delta)
+
+		if global_position.distance_to(target_position) < 0.01:
+			global_position = target_position
+			is_moving = false
+			_lock_input_for(input_lock_time)
+
+
 # form change helpers
 func _set_form(new_form: Form):
 	if current_form == new_form:
 		return
-		
+
 	current_form = new_form
 	print("Shifted to: ", Form.keys()[new_form])
-	
+
+
 func cycle_form_forward():
 	if is_hawk_powered:
 		return  # can't swap during hawk mode
@@ -131,55 +218,40 @@ func cycle_form_backward():
 	var prev_idx = (idx - 1 + cycle_forms.size()) % cycle_forms.size()
 	_set_form(cycle_forms[prev_idx])
 
-	
-func _attempt_move():
-	var stats = form_stats[current_form]
-	
-	if current_form == Form.KANGAROO:
-		_start_kangaroo_jump(input_dir, stats["jump_distance"])
-		return
-		
-	# basic step
-	var step = input_dir * TILE_SIZE
-	target_position = global_position + step
-	is_moving = true
 
-func _handle_movement(delta):
-	# kangaroon jump update
-	if current_form == Form.KANGAROO and is_jumping:
-		_update_kangaroo_jump(delta)
-		return
-		
-	if is_moving:
-		var speed = form_stats[current_form]["move_speed"]
-		global_position = global_position.move_toward(target_position, speed * delta)
-
-		if global_position.distance_to(target_position) < 0.01:
-			global_position = target_position
-			is_moving = false
-			_lock_input_for(input_lock_time)
-			
 # kangaroo jump
-func _start_kangaroo_jump(dir: Vector3, dist: int):
+func _start_kangaroo_jump(dx: int, dz: int, dist: int):
+	var targetGridX: int = gridX + dx * dist
+	var targetGridZ: int = gridZ + dz * dist
+
+	# check landing tile with same rules (band, lane, collision)
+	if not _can_move_to(targetGridX, targetGridZ):
+		return
+
 	is_jumping = true
 	jump_timer = 0.0
 
-	target_position = global_position + (dir * TILE_SIZE * dist)
 	_jump_start_pos = global_position
 	_jump_peak_height = 1.0
-	
-func _lock_input_for(time: float):
-	input_locked = true
-	await get_tree().create_timer(time).timeout
-	input_locked = false
+
+	_jump_target_grid_x = targetGridX
+	_jump_target_grid_z = targetGridZ
+
+	target_position = Vector3(
+		targetGridX * cellSize,
+		global_position.y,
+		targetGridZ * cellSize
+	)
 
 
 func _update_kangaroo_jump(delta):
 	jump_timer += delta
-	var t = jump_timer / jump_duration
+	var t: float = jump_timer / jump_duration
 
 	if t >= 1.0:
 		global_position = target_position
+		gridX = _jump_target_grid_x
+		gridZ = _jump_target_grid_z
 		is_jumping = false
 		_lock_input_for(input_lock_time)
 		return
@@ -189,6 +261,13 @@ func _update_kangaroo_jump(delta):
 	var vertical := sin(t * PI) * _jump_peak_height
 
 	global_position = Vector3(horizontal.x, vertical, horizontal.z)
+
+
+func _lock_input_for(time: float):
+	input_locked = true
+	await get_tree().create_timer(time).timeout
+	input_locked = false
+
 
 # hawk mode
 func activate_hawk_power():
@@ -204,12 +283,14 @@ func activate_hawk_power():
 
 	print("Hawk mode activated!")
 
+
 func _handle_hawk_power(delta):
+	# NOTE: z direction here may be "backwards" vs your other movement.
+	# Keep or flip depending on what looks right in your camera.
 	var forward = Vector3(0, 0, -1)
-	var speed = form_stats[Form.HAWK]["move_speed"]
+	var speed: float = form_stats[Form.HAWK]["move_speed"]
 
 	global_position += forward * speed * delta
-
 	hawk_timer += delta
 
 	# condition 1: Time expired
@@ -217,10 +298,11 @@ func _handle_hawk_power(delta):
 		_end_hawk_mode()
 		return
 
-	# condition 2: Land on safe tile
+	# condition 2: Land on safe tile (using grid + world, not raycast)
 	if _is_on_safe_tile():
 		_end_hawk_mode()
 		return
+
 
 func _end_hawk_mode():
 	print("Landing from hawk mode")
@@ -228,15 +310,19 @@ func _end_hawk_mode():
 	is_hawk_powered = false
 
 	# snap to grid for clean placement
+	gridX = roundi(global_position.x / cellSize)
+	gridZ = roundi(global_position.z / cellSize)
+
 	global_position = Vector3(
-		round(global_position.x),
+		gridX * cellSize,
 		global_position.y,
-		round(global_position.z)
+		gridZ * cellSize
 	)
 
 	# return to previous form
 	_set_form(previous_form)
-	
+
+
 func _is_on_safe_tile() -> bool:
 	var space := get_world_3d().direct_space_state
 	var query := PhysicsRayQueryParameters3D.new()

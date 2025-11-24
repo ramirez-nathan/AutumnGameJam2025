@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://cmcucuf8qrbdp"]
+
+[ext_resource type="PackedScene" uid="uid://ct7li1g2ktr8i" path="res://Player/player.tscn" id="1_62w18"]
+[ext_resource type="PackedScene" uid="uid://cbk3by2t6v4bh" path="res://PowerUps/HawkPowerUp.tscn" id="2_8a836"]
+
+[node name="World" type="Node3D"]
+
+[node name="CharacterBody3D" parent="." instance=ExtResource("1_62w18")]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.7071068, -0.5, 0.5, 0, 0.7071068, 0.70710677, -0.7071068, -0.5, 0.5, 5, 5, 2)
+
+[node name="HawkPowerUp" parent="." instance=ExtResource("2_8a836")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)

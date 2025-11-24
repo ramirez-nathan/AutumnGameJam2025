@@ -11,13 +11,17 @@ config_version=5
 [application]
 
 config/name="autumn game jam"
-run/main_scene="uid://cmcucuf8qrbdp"
+run/main_scene="uid://bvr0idg7u2a0w"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
 [dotnet]
 
 project/assembly_name="autumn game jam"
+
+[filesystem]
+
+import/blender/enabled=false
 
 [input]
 
