@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjn5ty1tjbhp4"]
+
+[ext_resource type="PackedScene" uid="uid://3uefo8vndilw" path="res://Assets/Cars/Sedan.glb" id="1_ggi30"]
+
+[node name="Sedan" type="Node3D"]
+
+[node name="Sedan" parent="." instance=ExtResource("1_ggi30")]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -3.75, -0.25, -1.125)

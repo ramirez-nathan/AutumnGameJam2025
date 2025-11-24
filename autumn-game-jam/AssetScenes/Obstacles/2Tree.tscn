@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://2bsae4sl2wyw"]
+
+[ext_resource type="PackedScene" uid="uid://daywnqk6vtjbb" path="res://Assets/Obstacles/Grassland_2Tree.glb" id="1_itu40"]
+
+[node name="2Tree" type="Node3D"]
+
+[node name="Grassland_2Tree" parent="." instance=ExtResource("1_itu40")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -4.5, -0.5, 0)

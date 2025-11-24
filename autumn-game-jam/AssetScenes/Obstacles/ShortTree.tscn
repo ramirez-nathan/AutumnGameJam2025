@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cvhvtr8ycqshd"]
+
+[ext_resource type="PackedScene" uid="uid://clpqilybg3ls" path="res://Assets/Obstacles/Grassland_ShortTree.glb" id="1_qbn2b"]
+
+[node name="ShortTree" type="Node3D"]
+
+[node name="Grassland_ShortTree" parent="." instance=ExtResource("1_qbn2b")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -3, -0.5, 0)
