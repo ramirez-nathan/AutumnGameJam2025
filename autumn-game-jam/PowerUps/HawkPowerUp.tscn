@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://cbk3by2t6v4bh"]
+
+[ext_resource type="Script" uid="uid://cdole5f1m424u" path="res://PowerUps/hawk_power_up.gd" id="1_5x78p"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6k12a"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_5x78p"]
+
+[node name="HawkPowerUp" type="Area3D"]
+script = ExtResource("1_5x78p")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_6k12a")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_5x78p")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

@@ -50,7 +50,7 @@ var _jump_peak_height := 1.0
 # hawk specific states
 var is_hawk_powered := false
 var hawk_timer := 0.0
-var max_hawk_time := 3.0
+var max_hawk_time := 1.5
 var _hawk_start_pos := Vector3.ZERO
 
 # forms that can be cycled through (hawk is excluded)
@@ -238,14 +238,17 @@ func _end_hawk_mode():
 	_set_form(previous_form)
 	
 func _is_on_safe_tile() -> bool:
-	# raycast downward
-	var space = get_world_3d().direct_space_state
-	var from = global_position + Vector3(0, 2, 0)
-	var to = global_position + Vector3(0, -5, 0)
+	var space := get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.new()
 
-	var hit = space.raycast(from, to)
+	query.from = global_position + Vector3(0, 2, 0)
+	query.to = global_position + Vector3(0, -5, 0)
+	query.collide_with_areas = true
+	query.collide_with_bodies = true
 
-	if hit and hit.collider and hit.collider.has_meta("safe_tile"):
+	var hit := space.intersect_ray(query)
+
+	if hit and hit.has("collider") and hit.collider.has_meta("safe_tile"):
 		return true
 
 	return false
