@@ -213,6 +213,8 @@ func _set_form(new_form: Form):
 		$Models/DUCK.show()
 	elif current_form == Form.KANGAROO:
 		$Models/KANGAROO.show()
+	elif current_form == Form.CAPYBARA:
+		$Models/CAPYBARA.show()
 	
 	var copy = $'GPUParticles3D'.duplicate()
 	add_child(copy)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://ct7li1g2ktr8i"]
+[gd_scene load_steps=12 format=3 uid="uid://ct7li1g2ktr8i"]
 
 [ext_resource type="Script" uid="uid://k7qkiynbn7p7" path="res://Player/playerController.gd" id="1_l8h54"]
 [ext_resource type="PackedScene" uid="uid://bva4olwrks6fr" path="res://Assets/Animals/Duck.glb" id="2_4ntmi"]
 [ext_resource type="PackedScene" uid="uid://8cdn27y76m50" path="res://Assets/Animals/Kangaroo.glb" id="3_btcbx"]
+[ext_resource type="PackedScene" uid="uid://cgdcn5xejiwij" path="res://Assets/Animals/Capybara.glb" id="4_gwnis"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hvfyp"]
 
@@ -52,6 +53,10 @@ transform = Transform3D(-1.3113417e-08, 0, -0.3, 0, 0.3, 0, 0.3, 0, -1.3113417e-
 
 [node name="KANGAROO" parent="Models" instance=ExtResource("3_btcbx")]
 transform = Transform3D(-1.0927847e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.0927847e-08, 0, 0, 0)
+visible = false
+
+[node name="CAPYBARA" parent="Models" instance=ExtResource("4_gwnis")]
+transform = Transform3D(-1.4206201e-08, 0, -0.325, 0, 0.325, 0, 0.325, 0, -1.4206201e-08, 0, 0, 0)
 visible = false
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
