@@ -16,19 +16,19 @@ var carScenes: Array[PackedScene] = [
 ]
 
 # --- LANE SETTINGS ---
-@export var numColumns: int = 30
+@export var numColumns: int = 35
 @export var cellSize: float = 1.0
 @export var groundHeight: float = 0.5
-@export var playableHalfWidth: int = 7    # should match Player.maxAbsGridX
+@export var playableHalfWidth: int = 10    # should match Player.maxAbsGridX
 
 # --- CAR SPAWN SETTINGS ---
-@export var minSpawnInterval: float = 1.0   # MIN seconds between spawns
-@export var maxSpawnInterval: float = 2.0   # MAX seconds between spawns
+@export var minSpawnInterval: float = 2.0   # MIN seconds between spawns
+@export var maxSpawnInterval: float = 4.0   # MAX seconds between spawns
 
 # --- CAR SPEED SETTINGS (PER-LANE) ---
-@export var minLaneSpeed: float = 3.0       # MIN lane speed
-@export var maxLaneSpeed: float = 6.0       # MAX lane speed
-var laneCarSpeed: float = 4.0               # actual speed chosen for THIS lane
+@export var minLaneSpeed: float = 2.0       # MIN lane speed
+@export var maxLaneSpeed: float = 5.0       # MAX lane speed
+var laneCarSpeed: float = 3.0               # actual speed chosen for THIS lane
 
 # Vertical offset for cars if they float/sink slightly
 @export var carYOffset: float = 0.0
@@ -73,6 +73,7 @@ var carColors: Array[Color] = [
 
 func _ready() -> void:
 	rng.randomize()
+	@warning_ignore("integer_division")
 	halfColumns = numColumns / 2
 
 	_createRoadTiles()
@@ -129,7 +130,6 @@ func _chooseLaneDirection() -> void:
 func _chooseLaneSpeed() -> void:
 	# Each lane picks ONE speed in range; all its cars use that
 	laneCarSpeed = rng.randf_range(minLaneSpeed, maxLaneSpeed)
-	# Debug (optional):
 	# print("RoadLane speed: ", laneCarSpeed, " dir: ", spawnFromLeft ? "L->R" : "R->L")
 
 
@@ -173,16 +173,12 @@ func _spawnCar() -> void:
 
 	car.position = Vector3(spawnX, carYOffset, 0.0)
 
-	# Face the direction of travel.
-	# You said:
-	# - cars moving left -> right should be rotated +90 degrees
-	# - cars moving right -> left should be rotated -90 degrees
-	#
-	# Using radians:
+	# Face the direction of travel:
+	# +X should be +90°, -X should be -90°
 	var yaw: float = deg_to_rad(90.0) if spawnFromLeft else deg_to_rad(-90.0)
 	car.rotation.y = yaw
 
-	# Give car a random bright color
+	# Give car a random bright color (only Body node if present)
 	_applyRandomColorToCar(car)
 
 	add_child(car)
@@ -227,10 +223,19 @@ func _applyRandomColorToCar(car: Node3D) -> void:
 	var colorIndex: int = rng.randi_range(0, carColors.size() - 1)
 	var chosenColor: Color = carColors[colorIndex]
 
-	_applyColorRecursive(car, chosenColor)
+	# STRICT: only recolor meshes under a child called "Body".
+	# If there's no Body node, do nothing (so we can notice the issue).
+	var bodyNode = car.get_node(str(car.name)).get_node_or_null("Body")
+
+	if bodyNode == null:
+		print("No 'Body' node found for car: ", car.name)
+		return
+
+	# Only recolor meshes under Body
+	_applyColorToNodeMeshes(bodyNode, chosenColor)
 
 
-func _applyColorRecursive(node: Node, color: Color) -> void:
+func _applyColorToNodeMeshes(node: Node, color: Color) -> void:
 	if node is MeshInstance3D:
 		var meshInst: MeshInstance3D = node
 		var mat := StandardMaterial3D.new()
@@ -238,7 +243,8 @@ func _applyColorRecursive(node: Node, color: Color) -> void:
 		meshInst.set_surface_override_material(0, mat)
 
 	for child in node.get_children():
-		_applyColorRecursive(child, color)
+		_applyColorToNodeMeshes(child, color)
+
 
 
 # ----------------------

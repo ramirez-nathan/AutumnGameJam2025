@@ -4,10 +4,10 @@ extends Node3D
 const RAVINE_TILE_SCENE: PackedScene = preload("res://AssetScenes/Tiles/Ravine.tscn")
 const BRIDGE_SCENE: PackedScene      = preload("res://AssetScenes/Tiles/Bridge.tscn")
 
-@export var numColumns: int = 30
+@export var numColumns: int = 35
 @export var cellSize: float = 1.0
 @export var numPlatforms: int = 4
-@export var playableHalfWidth: int = 7    # matches Player.maxAbsGridX
+@export var playableHalfWidth: int = 10    # matches Player.maxAbsGridX
 
 var rng := RandomNumberGenerator.new()
 var halfColumns: int = 0

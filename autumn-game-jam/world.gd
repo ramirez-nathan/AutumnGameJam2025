@@ -1,6 +1,13 @@
 # world.gd
 extends Node3D
 
+@onready var gameOverLayer: CanvasLayer = $GameOverLayer
+@onready var scoreLabel: Label = $GameOverLayer/Panel/ScoreLabel
+@onready var playAgainButton: Button = $GameOverLayer/Panel/PlayAgainButton
+@onready var quitButton: Button = $GameOverLayer/Panel/QuitButton
+
+var isGameOver: bool = false
+
 @export var forestLaneScene: PackedScene
 @export var roadLaneScene: PackedScene
 @export var ravineLaneScene: PackedScene
@@ -31,6 +38,14 @@ func _ready() -> void:
 	furthestLaneTraveled = currentLaneIndex
 
 	ensureLanesAroundPlayer()
+	
+	# Game over UI starts hidden
+	gameOverLayer.visible = false
+
+
+	# Connect buttons
+	playAgainButton.pressed.connect(_onPlayAgainButtonPressed)
+	quitButton.pressed.connect(_onQuitButtonPressed)
 
 
 func _process(delta: float) -> void:
@@ -172,3 +187,29 @@ func isCellWalkable(gridX: int, gridZ: int) -> bool:
 		return lane.isCellWalkable(gridX)
 
 	return true
+	
+func onPlayerDied() -> void:
+	if isGameOver:
+		return
+	isGameOver = true
+
+	# Freeze the game world
+	get_tree().paused = true
+
+	# Show game over UI
+	gameOverLayer.visible = true
+
+	# Display furthest lane as score
+	# (Assuming furthestLaneTraveled is an int you're already tracking)
+	scoreLabel.text = "Score: " + str(furthestLaneTraveled)
+
+
+func _onPlayAgainButtonPressed() -> void:
+	# Unpause and reload the scene
+	get_tree().paused = false
+	isGameOver = false
+	get_tree().reload_current_scene()
+
+
+func _onQuitButtonPressed() -> void:
+	get_tree().quit()

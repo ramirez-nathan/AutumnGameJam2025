@@ -15,11 +15,11 @@ var treeScenes: Array[PackedScene] = [
 	shortTreeScene,
 	tallTreeScene,
 ]
-@export var numColumns: int = 30      # width of lane in tiles
+@export var numColumns: int = 35      # width of lane in tiles
 @export var cellSize: float = 1.0
 @export var groundHeight: float = 0.5   # not really used now, but fine to keep
 @export var obstacleChance: float = 0.3 # chance per cell for a tree
-@export var playableHalfWidth: int = 7  # should match Player.maxAbsGridX
+@export var playableHalfWidth: int = 10  # should match Player.maxAbsGridX
 
 var rng := RandomNumberGenerator.new()
 var halfColumns: int = 0

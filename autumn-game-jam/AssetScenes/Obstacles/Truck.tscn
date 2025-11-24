@@ -1,8 +1,19 @@
-[gd_scene load_steps=2 format=3 uid="uid://ccrchwpaw0886"]
+[gd_scene load_steps=4 format=3 uid="uid://ccrchwpaw0886"]
 
+[ext_resource type="Script" uid="uid://b3jbp1c3acyew" path="res://AssetScenes/Obstacles/carHitbox.gd" id="1_gbh57"]
 [ext_resource type="PackedScene" uid="uid://oopkb6fgr4vt" path="res://Assets/Cars/Truck.glb" id="1_wxc8t"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_wxc8t"]
+size = Vector3(0.40768433, 0.47460938, 0.9309082)
+
 [node name="Truck" type="Node3D"]
+script = ExtResource("1_gbh57")
 
 [node name="Truck" parent="." instance=ExtResource("1_wxc8t")]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -3, -0.25, -1.125)
+
+[node name="HitboxArea" type="Area3D" parent="."]
+
+[node name="TruckHitbox" type="CollisionShape3D" parent="HitboxArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0007419586, 0.2282753, 0.0146484375)
+shape = SubResource("BoxShape3D_wxc8t")

@@ -19,7 +19,7 @@ var previous_form: Form = Form.DUCK
 
 # input lock
 var input_locked := false
-var input_lock_time := 0.05  # tuneable, 50ms feels good
+var input_lock_time := 0.01  # tuneable, 10ms feels good
 
 var form_stats := {
 	Form.DUCK: {
