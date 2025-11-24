@@ -72,6 +72,7 @@ func _ready() -> void:
 	gridZ = roundi(global_position.z / cellSize)
 	global_position = Vector3(gridX * cellSize, global_position.y, gridZ * cellSize)
 	target_position = global_position
+	GameManager.register_player(self)
 
 
 # main phys loop
