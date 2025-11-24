@@ -6,7 +6,7 @@ extends Node3D
 @export var ravineLaneScene: PackedScene
 
 @export var cellSize: float = 1.0             # must match lanes & player
-@export var playableLanesAhead: int = 12      # player can walk this many lanes ahead of furthest
+@export var playableLanesAhead: int = 52      # player can walk this many lanes ahead of furthest
 @export var playableLanesBehind: int = 3      # player can walk this many lanes behind furthest
 @export var visibleExtraBehind: int = 8       # extra lanes we KEEP behind, but cannot walk on
 
@@ -14,9 +14,9 @@ extends Node3D
 
 var laneMap: Dictionary = {}                  # laneIndex -> lane Node3D
 
-var currentLaneIndex: int = 0
-var furthestLaneTraveled: int = 0
-var furthestLaneGenerated: int = -1
+@export var currentLaneIndex: int = 0
+@export var furthestLaneTraveled: int = 0
+@export var furthestLaneGenerated: int = -1
 
 var rng := RandomNumberGenerator.new()
 

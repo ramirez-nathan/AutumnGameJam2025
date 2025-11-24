@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cvq7ypepa3mcj"
-path.s3tc="res://.godot/imported/Grassland_3Tree_Untitled.png-07acdb22e2c628f9fc36554c3b58f4d3.s3tc.ctex"
+uid="uid://co8l4plfgssld"
+path.s3tc="res://.godot/imported/Road_Bottom_Untitled.png-0e58ba30e15109d6e971371b99e6b049.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -14,8 +14,8 @@ generator_parameters={
 
 [deps]
 
-source_file="res://Assets/Obstacles/Grassland_3Tree_Untitled.png"
-dest_files=["res://.godot/imported/Grassland_3Tree_Untitled.png-07acdb22e2c628f9fc36554c3b58f4d3.s3tc.ctex"]
+source_file="res://Assets/Tiles/Road_Bottom_Untitled.png"
+dest_files=["res://.godot/imported/Road_Bottom_Untitled.png-0e58ba30e15109d6e971371b99e6b049.s3tc.ctex"]
 
 [params]
 

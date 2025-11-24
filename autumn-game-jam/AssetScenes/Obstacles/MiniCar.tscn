@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bnhgrxqyopv6p"]
+
+[ext_resource type="PackedScene" uid="uid://cqtwmexne8odp" path="res://Assets/Cars/MiniCar.glb" id="1_0jlsg"]
+
+[node name="MiniCar" type="Node3D"]
+
+[node name="MiniCar" parent="." instance=ExtResource("1_0jlsg")]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -1.5, -0.25, -1.125)

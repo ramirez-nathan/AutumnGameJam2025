@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://rdu4bs1q5pf8"
-path.s3tc="res://.godot/imported/Bridge_Untitled.png-4ddfac495c0951c6097a0b6d6ee12e54.s3tc.ctex"
+uid="uid://bp1n15a452qgi"
+path.s3tc="res://.godot/imported/Rail_Untitled.png-6458b31194305d3a47dc5213f33f7a4d.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -14,8 +14,8 @@ generator_parameters={
 
 [deps]
 
-source_file="res://AssetScenes/Tiles/Bridge_Untitled.png"
-dest_files=["res://.godot/imported/Bridge_Untitled.png-4ddfac495c0951c6097a0b6d6ee12e54.s3tc.ctex"]
+source_file="res://Assets/Tiles/Rail_Untitled.png"
+dest_files=["res://.godot/imported/Rail_Untitled.png-6458b31194305d3a47dc5213f33f7a4d.s3tc.ctex"]
 
 [params]
 

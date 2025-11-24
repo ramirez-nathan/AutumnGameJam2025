@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://pltuhyfyujpa"]
 
-[ext_resource type="PackedScene" uid="uid://8e3vgqxxy6ay" path="res://AssetScenes/Tiles/Grass.glb" id="1_nyvmg"]
+[ext_resource type="PackedScene" uid="uid://8e3vgqxxy6ay" path="res://Assets/Tiles/Grass.glb" id="1_nyvmg"]
 
 [node name="Grass" type="Node3D"]
 

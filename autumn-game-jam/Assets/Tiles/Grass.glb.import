@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://c7h5slefk15rp"
-path="res://.godot/imported/Ravine.glb-87c4df3cd87a4580f43b0db0436a7eea.scn"
+uid="uid://8e3vgqxxy6ay"
+path="res://.godot/imported/Grass.glb-d925a75474efbaec6d9f53b083073c83.scn"
 
 [deps]
 
-source_file="res://AssetScenes/Tiles/Ravine.glb"
-dest_files=["res://.godot/imported/Ravine.glb-87c4df3cd87a4580f43b0db0436a7eea.scn"]
+source_file="res://Assets/Tiles/Grass.glb"
+dest_files=["res://.godot/imported/Grass.glb-d925a75474efbaec6d9f53b083073c83.scn"]
 
 [params]
 

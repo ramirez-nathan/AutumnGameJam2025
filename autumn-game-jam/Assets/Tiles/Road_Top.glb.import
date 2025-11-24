@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://8e3vgqxxy6ay"
-path="res://.godot/imported/Grass.glb-5e6a1b267e314f4860c3ca5915c1ce70.scn"
+uid="uid://c0d5r34hrdu6i"
+path="res://.godot/imported/Road_Top.glb-aaeecdfc7a3655542988fd69296e9ffc.scn"
 
 [deps]
 
-source_file="res://AssetScenes/Tiles/Grass.glb"
-dest_files=["res://.godot/imported/Grass.glb-5e6a1b267e314f4860c3ca5915c1ce70.scn"]
+source_file="res://Assets/Tiles/Road_Top.glb"
+dest_files=["res://.godot/imported/Road_Top.glb-aaeecdfc7a3655542988fd69296e9ffc.scn"]
 
 [params]
 

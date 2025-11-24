@@ -138,6 +138,18 @@ func _can_move_to(targetGridX: int, targetGridZ: int) -> bool:
 	return true
 
 
+# NEW: rotate character to face the given grid direction
+func _face_direction(dx: int, dz: int) -> void:
+	var dir_vec := Vector3(dx, 0, dz)
+	if dir_vec == Vector3.ZERO:
+		return
+
+	dir_vec = dir_vec.normalized()
+	# y-rotation in Godot is atan2(x, z)
+	var yaw := atan2(dir_vec.x, dir_vec.z)
+	rotation.y = yaw
+
+
 func _attempt_move(dir: Vector3) -> void:
 	var stats = form_stats[current_form]
 
@@ -157,6 +169,9 @@ func _attempt_move(dir: Vector3) -> void:
 
 	if not _can_move_to(newGridX, newGridZ):
 		return
+
+	# Face the direction we are about to move
+	_face_direction(dx, dz)
 
 	gridX = newGridX
 	gridZ = newGridZ
@@ -228,6 +243,9 @@ func _start_kangaroo_jump(dx: int, dz: int, dist: int):
 	if not _can_move_to(targetGridX, targetGridZ):
 		return
 
+	# Face the jump direction
+	_face_direction(dx, dz)
+
 	is_jumping = true
 	jump_timer = 0.0
 
@@ -280,6 +298,9 @@ func activate_hawk_power():
 	is_hawk_powered = true
 	hawk_timer = 0.0
 	_hawk_start_pos = global_position
+
+	# OPTIONAL: face the hawk's forward direction (0,0,-1)
+	_face_direction(0, -1)
 
 	print("Hawk mode activated!")
 

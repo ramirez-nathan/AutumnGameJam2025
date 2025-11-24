@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://beogh3hmkpqnr"]
 
-[ext_resource type="PackedScene" uid="uid://opucwckm47q8" path="res://AssetScenes/Tiles/Bridge.glb" id="1_vcbiy"]
+[ext_resource type="PackedScene" uid="uid://opucwckm47q8" path="res://Assets/Tiles/Bridge.glb" id="1_vcbiy"]
 
 [node name="Bridge" type="Node3D"]
 

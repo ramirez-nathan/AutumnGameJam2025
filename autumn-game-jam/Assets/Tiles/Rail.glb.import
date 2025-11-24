@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dglg3hmvjoufv"
-path="res://.godot/imported/Grassland_3Tree.glb-d1a204d15debd5c20e53a95de65e8994.scn"
+uid="uid://b871e8y56mlpq"
+path="res://.godot/imported/Rail.glb-e6806983ebee0a0ca0a231d9b9b4ca98.scn"
 
 [deps]
 
-source_file="res://AssetScenes/Obstacles/Grassland_3Tree.glb"
-dest_files=["res://.godot/imported/Grassland_3Tree.glb-d1a204d15debd5c20e53a95de65e8994.scn"]
+source_file="res://Assets/Tiles/Rail.glb"
+dest_files=["res://.godot/imported/Rail.glb-e6806983ebee0a0ca0a231d9b9b4ca98.scn"]
 
 [params]
 

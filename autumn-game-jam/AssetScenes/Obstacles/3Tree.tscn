@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://vbi58e5qfei5"]
 
-[ext_resource type="PackedScene" uid="uid://dglg3hmvjoufv" path="res://AssetScenes/Obstacles/Grassland_3Tree.glb" id="1_mnydm"]
+[ext_resource type="PackedScene" uid="uid://dglg3hmvjoufv" path="res://Assets/Obstacles/Grassland_3Tree.glb" id="1_mnydm"]
 
 [node name="3Tree" type="Node3D"]
 

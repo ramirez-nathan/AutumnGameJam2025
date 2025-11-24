@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cgjvlu0d4nss4"]
+
+[ext_resource type="PackedScene" uid="uid://bs11pwovm02rt" path="res://Assets/Cars/Pickup.glb" id="1_h8p6j"]
+
+[node name="Pickup" type="Node3D"]
+
+[node name="Pickup" parent="." instance=ExtResource("1_h8p6j")]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -2.25, -0.25, -1.125)

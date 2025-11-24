@@ -2,8 +2,19 @@
 extends Node3D
 
 const GRASS_TILE_SCENE: PackedScene = preload("res://AssetScenes/Tiles/Grass.tscn")
-const TREE_SCENE: PackedScene = preload("res://AssetScenes/Obstacles/3Tree.tscn")  # adjust if your tree path is different
 
+const threeTreeScene: PackedScene = preload("res://AssetScenes/Obstacles/3Tree.tscn")
+const twoTreeScene: PackedScene   = preload("res://AssetScenes/Obstacles/2Tree.tscn")
+const shortTreeScene: PackedScene = preload("res://AssetScenes/Obstacles/ShortTree.tscn")
+const tallTreeScene: PackedScene  = preload("res://AssetScenes/Obstacles/TallTree.tscn")
+
+# Put all of them into an array so we can randomly pick one
+var treeScenes: Array[PackedScene] = [
+	threeTreeScene,
+	twoTreeScene,
+	shortTreeScene,
+	tallTreeScene,
+]
 @export var numColumns: int = 30      # width of lane in tiles
 @export var cellSize: float = 1.0
 @export var groundHeight: float = 0.5   # not really used now, but fine to keep
@@ -75,8 +86,15 @@ func createGroundCell(xIndex: int) -> void:
 
 
 func createObstacleAt(xIndex: int) -> void:
-	# Use your tree scene as the obstacle model
-	var tree: Node3D = TREE_SCENE.instantiate()
+	# Pick a random tree PackedScene from the list
+	if treeScenes.is_empty():
+		return  # safety guard
+
+	var randomIndex: int = rng.randi_range(0, treeScenes.size() - 1)
+	var treeScene: PackedScene = treeScenes[randomIndex]
+
+	# Instantiate that tree
+	var tree: Node3D = treeScene.instantiate()
 
 	# Place the tree on this tile; tweak Y if needed based on the model pivot
 	tree.position = Vector3(float(xIndex) * cellSize, 0.0, 0.0)
@@ -85,7 +103,6 @@ func createObstacleAt(xIndex: int) -> void:
 
 	blockedColumns[xIndex] = true
 	obstacleNodes[xIndex] = tree
-
 
 func isCellWalkable(xIndex: int) -> bool:
 	if abs(xIndex) > halfColumns:

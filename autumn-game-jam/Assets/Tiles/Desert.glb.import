@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://opucwckm47q8"
-path="res://.godot/imported/Bridge.glb-6f47f5384d738b125511ed183be415d9.scn"
+uid="uid://0bv5dsgplew5"
+path="res://.godot/imported/Desert.glb-94358805fc5c8de0251aec3590be3277.scn"
 
 [deps]
 
-source_file="res://AssetScenes/Tiles/Bridge.glb"
-dest_files=["res://.godot/imported/Bridge.glb-6f47f5384d738b125511ed183be415d9.scn"]
+source_file="res://Assets/Tiles/Desert.glb"
+dest_files=["res://.godot/imported/Desert.glb-94358805fc5c8de0251aec3590be3277.scn"]
 
 [params]
 
