@@ -34,6 +34,8 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	$UI/Score.text = "Score: " + str(furthestLaneTraveled)
+	
 	var laneFromPos: int = roundi(player.position.z / cellSize)
 
 	if laneFromPos != currentLaneIndex:
@@ -44,6 +46,19 @@ func _process(delta: float) -> void:
 
 	ensureLanesAroundPlayer()
 	cleanupOldLanes()
+	
+	if Input.is_action_just_pressed("pause"):
+		if Engine.time_scale == 0:
+			Engine.time_scale = 1
+			$UI/PauseScreen.hide()
+		else:
+			Engine.time_scale = 0
+			$UI/PauseScreen.show()
+	
+	if Input.is_action_just_pressed("left-click"):
+		if Engine.time_scale == 0:
+			Engine.time_scale = 1
+			$UI/PauseScreen.hide()
 
 
 func getPlayableMinMax() -> Vector2i:
